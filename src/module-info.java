@@ -3,4 +3,5 @@ module Workshop_JavaFX_JDBC {
 	requires javafx.fxml;
 	
 	opens application to javafx.graphics, javafx.fxml;
+	opens gui to javafx.graphics, javafx.fxml;
 }
