@@ -31,7 +31,7 @@ public class MainViewController implements Initializable{
 	}
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		System.out.println("onMenuItemDepartmentAction");
+		loadView("/gui/DepartmentList.fxml");
 	}
 	@FXML
 	public void onMenuItemAboutAction() {
@@ -45,25 +45,25 @@ public class MainViewController implements Initializable{
 	private synchronized void loadView(String absoluteName) {
 		
 		try {
-			//CRIA A TELA
+			// CRIA A TELA
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
-		//ATRIBUI A TELA A UMA VARIAVEL VBOX
+		// ATRIBUI A TELA A UMA VARIAVEL VBOX
 		VBox newVBox = loader.load();
 		// CHAMA A CENA PRINCIPAL
 		
 		Scene mainScene = Main.getMainScene();
-		///ATRIBUI O CONTEUDO VBOX DA CENA PRINCIPAL A UMA VARIAVEL
+		// ATRIBUI O CONTEUDO VBOX DA CENA PRINCIPAL A UMA VARIAVEL
 		VBox mainVBox = (VBox) ((ScrollPane)mainScene.getRoot()).getContent();
 		
-		//SALVAMOS O CONTEUDO EM UMA VARIAVEL, DPS LIMPAMOS O CONTEUDO:
+		// SALVAMOS O CONTEUDO EM UMA VARIAVEL, DPS LIMPAMOS O CONTEUDO:
 		
-		//CHAMA A VARIAVEL COM O CONTEUDO DA CENA PRINCIPAL E PUXA O FILHO NA POSIÇÃO 0 SENDO O PRIMEIRO
-		//Q É O PRIMEIRO VBOX DA JANELA PRINCIAPL
+		// CHAMA A VARIAVEL COM O CONTEUDO DA CENA PRINCIPAL E PUXA O FILHO NA POSIÇÃO 0 SENDO O PRIMEIRO
+		// Q É O PRIMEIRO VBOX DA JANELA PRINCIAPL
 		Node mainMenu = mainVBox.getChildren().get(0);
-		//LIMPA TODO O CONTEUDO DOS FILHOS DA CENA PRINCIPAL
+		// LIMPA TODO O CONTEUDO DOS FILHOS DA CENA PRINCIPAL
 		mainVBox.getChildren().clear();
 		
-		//AGORA PRECIAMOS REUNIR ELES.
+		// AGORA PRECIAMOS REUNIR ELES.
 		mainVBox.getChildren().add(mainMenu);
 		mainVBox.getChildren().addAll(newVBox.getChildren());
 		
