@@ -84,10 +84,14 @@ public class DepartmentListController implements Initializable {
 			Pane pane = loader.load();
 			//PEGA O CONTROLADOR E PASSA ESSA TELA COMO CONTROLADORA
 			DepartmentFormController controller = loader.getController();
-			//INSTANCIAMOS DEPARTAMENTO COM O CONTROLLER FORNECIDO
+			//INSTANCIAMOS DEPARTAMENTO PARA O CONTROLLER FORNECIDO
 			controller.setDepartment(obj);
+			// INSTANCIAMOS TAMBE MO DEPARTMENTSERVICE PARA O CONTROLLER FORNECIDO
+			controller.setDepartmentService(new DepartmentService());
 			// PEGAMOS AS INFORMAÇÕES E SUBIMOS NA TELA
 			controller.updateFormData();
+			
+			
 			
 			// INSTANCIAMOS UM NOVO STAGE PARA POR UM NA FRENTE DO OUTRO:
 			Stage dialogStage = new Stage();
