@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listeners.DataChangeListener;
@@ -18,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Department;
+import model.exceptions.ValidationException;
 import model.services.DepartmentService;
 
 public class DepartmentFormController implements Initializable {
@@ -70,6 +73,12 @@ public class DepartmentFormController implements Initializable {
 		//COMANDO QUE FECHA O A JANELA ATUAL
 		Utils.currentStage(event).close();
 		}
+		catch (ValidationException e) {
+			// ELE RETORNA A LISTA DE ERROS PARA O METODO QUE MUDA
+			// A LABEL ONDE ESTA FICARA O ERRO
+			setErrorMessages(e.getErrors());
+			
+		}
 		catch (DbException e) {
 			Alerts.showAlert("Error saving object", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -77,15 +86,32 @@ public class DepartmentFormController implements Initializable {
 	private void notifyDataChangeListeners() {
 		// PERCORRE MINHA LISTA
 		for(DataChangeListener listener: dataChangeListeners)
-		//ALTERA CADA UMA DELAS
+		// ALTERA CADA UMA DELAS
 		listener.onDataChanged();
 		
 	}
-
+	// PUXA OQ TEM NA CAIXA, SETA NO OBJ DEPARTMENT E RETORNA NO METODO
 	private Department getFormData() {
+		
+		
+		
 		Department obj = new Department();
+		
+		// INSTANCIAMOS A CLASSE RESPONSAVEL POR TRATAR OS ERROS
+		ValidationException exception = new ValidationException ("Validation Error");
+		
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		// VALIDA SE A CAIXA É NULA OU VAZIA PARA GERAR A EXCEÇÃO
+		// .TRIM TIRA OS ESPAÇOS DO Q VAI SER GET
+		if (txtName.getText() == null || txtName.getText().trim().equals(""));{
+			exception.addError("name", "Field can't be empty");
+		}
 		obj.setName(txtName.getText());
+		// SE AL ISTA FOR MAIOR Q 0, LANÇA A EXCEÇÃO.
+		if (exception.getErrors().size() > 0 ) {
+			throw exception;
+		}
+		
 		return obj;
 	}
 
@@ -114,5 +140,16 @@ public class DepartmentFormController implements Initializable {
 		}
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
+	}
+	
+	private void setErrorMessages (Map <String, String> errors) {
+		// FAÇO UMA LISTA COM O NOME DAS CHAVES
+		Set<String> fields = errors.keySet();
+		// USO CADA CHAVE TRAZENDO O ELEMENTO VINCULADO A ELA
+		if(fields.contains("name")) {
+			// EXIBE NA LABEL O ERRO DA CHAVE NAME
+			labelErrorName.setText(errors.get("name"));
+		}
+		
 	}
 }
