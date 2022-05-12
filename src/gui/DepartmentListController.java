@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.DepartmentService;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, DataChangeListener {
 
 	private DepartmentService service;
 	
@@ -88,6 +89,8 @@ public class DepartmentListController implements Initializable {
 			controller.setDepartment(obj);
 			// INSTANCIAMOS TAMBE MO DEPARTMENTSERVICE PARA O CONTROLLER FORNECIDO
 			controller.setDepartmentService(new DepartmentService());
+			//INSCREVER ESSE DIALOG FORM PARA RECEBER O UPDATE NA HORA Q ALGO MUDAR ONDATACHANGED
+			controller.subscribeDataChangeListener(this);
 			// PEGAMOS AS INFORMAÇÕES E SUBIMOS NA TELA
 			controller.updateFormData();
 			
@@ -114,5 +117,11 @@ public class DepartmentListController implements Initializable {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
 		}
 	
+	}
+
+	@Override
+	public void onDataChanged() {
+		updateTableView();
+		
 	}
 }
