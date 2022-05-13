@@ -103,12 +103,12 @@ public class DepartmentFormController implements Initializable {
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
 		// VALIDA SE A CAIXA É NULA OU VAZIA PARA GERAR A EXCEÇÃO
 		// .TRIM TIRA OS ESPAÇOS DO Q VAI SER GET
-		if (txtName.getText() == null || txtName.getText().trim().equals(""));{
+		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
 			exception.addError("name", "Field can't be empty");
 		}
 		obj.setName(txtName.getText());
 		// SE AL ISTA FOR MAIOR Q 0, LANÇA A EXCEÇÃO.
-		if (exception.getErrors().size() > 0 ) {
+		if (exception.getErrors().size() > 0) {
 			throw exception;
 		}
 		
@@ -142,13 +142,13 @@ public class DepartmentFormController implements Initializable {
 		txtName.setText(entity.getName());
 	}
 	
-	private void setErrorMessages (Map <String, String> errors) {
+	private void setErrorMessages(Map<String, String> errors) {
 		// FAÇO UMA LISTA COM O NOME DAS CHAVES
 		Set<String> fields = errors.keySet();
 		// USO CADA CHAVE TRAZENDO O ELEMENTO VINCULADO A ELA
-		if(fields.contains("name")) {
+				if (fields.contains("name")) {
 			// EXIBE NA LABEL O ERRO DA CHAVE NAME
-			labelErrorName.setText(errors.get("name"));
+				labelErrorName.setText(errors.get("name"));
 		}
 		
 	}

@@ -14,7 +14,7 @@ public class ValidationException extends RuntimeException {
 		super(msg);
 	}
 	//METODOO PARA RETORNAR A LISTA DE ERROS
-	public Map<String, String> getErrors (){
+	public Map<String, String> getErrors() {
 		return errors;
 	}
 	//METODO PARA ADICIONAR O ELEMENTRO NA COLEÇÃO
