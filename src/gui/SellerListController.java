@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -40,6 +41,19 @@ public class SellerListController implements Initializable, DataChangeListener {
 	@FXML
 	private TableColumn<Seller, String> tableColumnName;
 	
+	@FXML
+	private TableColumn<Seller, String> tableColumnEmail;
+	
+	@FXML
+	private TableColumn<Seller, Date> tableColumnBirthDate;
+	
+	@FXML
+	private TableColumn<Seller, Double> tableColumnBaseSalary;
+	
+	@FXML
+
+	private TableColumn<Seller, Integer> tableColumnDepartmentId;
+		
 	@FXML // TABELA Q SERA USADA PARA ATUALIZAR OS DEPARTAMENTOS
 	private TableColumn <Seller, Seller> tableColumnEDIT;
 	
@@ -68,11 +82,21 @@ public class SellerListController implements Initializable, DataChangeListener {
 	}
 
 	private void initializeNodes() {
+		// AQUI SETAMOS OQ CADA COLUNA VAI RECEBER
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		tableColumnBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+		tableColumnBaseSalary.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
+		tableColumnDepartmentId.setCellValueFactory(new PropertyValueFactory<>("department"));
+		//METODO QUE FORMATA AS TABLESVIEWS DATA E BASE SALARY
+		Utils.formatTableColumnDate(tableColumnBirthDate, "dd/MM/yyyy");
+		Utils.formatTableColumnDouble(tableColumnBaseSalary, 2);
 		
+		// AQUI DEIXA A TABLE VIEW RESPONSIVA
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewSeller.prefHeightProperty().bind(stage.heightProperty());
+					
 	}
 	
 	public void updateTableView() {

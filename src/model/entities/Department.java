@@ -60,6 +60,9 @@ public class Department implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Department [id=" + id + ", name=" + name + "]";
+		// UPDATE
+		return name;
+		// OUTDATE
+		// return "Department [id=" + id + ", name=" + name + "]";
 	}
 }
