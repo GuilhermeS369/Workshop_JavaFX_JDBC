@@ -3,9 +3,11 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import application.Main;
+import db.DbIntegrityException;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
@@ -19,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -44,6 +47,9 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	
 	@FXML // TABELA Q SERA USADA PARA ATUALIZAR OS DEPARTAMENTOS
 	private TableColumn <Department, Department> tableColumnEDIT;
+	
+	@FXML // TABELA QUE SERA UUSADA PARA DELETAR OS DEPARTAMENTOS
+	private TableColumn <Department, Department> tableColumnREMOVE;
 	
 	@FXML
 	private Button btNew;
@@ -83,6 +89,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		tableViewDepartment.setItems(obsList);
 		// INICIA OS BOTOES DE EDITAR
 		initEditButtons();
+		initRemoveButtons();
 	}
 	
 	private void createDialogForm(Department obj,String absoluteName, Stage parentStage) {
@@ -154,6 +161,59 @@ public class DepartmentListController implements Initializable, DataChangeListen
 						obj, "/gui/DepartmentForm.fxml", Utils.currentStage(event)));
 			}
 		});
+	}
+	
+	private void initRemoveButtons() { 
+		// SELECIONA O VALOR QUE IRA NA TABELA
+		tableColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		// ESCOLHE QUE INFORMAÇÃO IRA NA TABLEA
+		tableColumnREMOVE.setCellFactory(param -> new TableCell<Department, Department> (){
+			private final Button button = new Button("remove");
+			
+			@Override
+			protected void updateItem(Department obj, boolean empty) {
+				super.updateItem(obj, empty);
+				// SE NAO TEM OBJETO NA LINHA ENTAO RETORNA TUDO NULO
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				// SETA UM BUTAO QUE VAI FAZER O EVENTO ABAIXO
+				setGraphic(button);
+				button.setOnAction(event -> removeEntity(obj));
+			}
+						
+		});
+		
+	}
+
+	private void  removeEntity(Department obj) {
+	// METODO DE REMOVER, PRIMEIRO CHAMAMOS O ALERT:
+	// SERA UM BOTAO CLICADO	
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmation", "Are you sure to delete?");
+		// FAREMOS UM TESTE QUE OBTEM O RESULTADO DE DENTRO DO METODO COM GET
+		// SE FOI OK, ARMAZONEA BUTTONTYPE.OK
+		if (result.get() == ButtonType.OK) {
+			// PRECISAMOS FAZER UNS TESTES PRINCIPALMENTE DA INSTANCIA:
+			if(service == null) {
+				throw new IllegalStateException("Service was null");
+			}
+			
+			try {
+			// COMANDO DE REMOVER
+			service.remove(obj);
+			// FORÇA ATUALIZAÇÃO DA TABELA
+			updateTableView();
+			}		
+			// ESSA DB INTEGRITY EXCEPTION FOI TIRADA DO departmentDaoJDBC, Q CASO HAJA UM ERRO
+			// UM ERRO, ELE LANÇA ESSE TIPO DE EXCEÇÃO
+			catch (DbIntegrityException e) {
+				Alerts.showAlert("Error removing object", null, e.getMessage(), AlertType.ERROR);
+			}
+					
+					
+		}
+		
 	}
 
 }
