@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Seller;
@@ -36,7 +40,19 @@ public class SellerFormController implements Initializable {
 	@FXML
 	private TextField txtName;
 	@FXML
+	private TextField txtEmail;
+	@FXML
+	private DatePicker dpBirthDate;
+	@FXML
+	private TextField txtBaseSalary;
+	@FXML
 	private Label labelErrorName;
+	@FXML
+	private Label labelErrorEmail;
+	@FXML
+	private Label labelErrorBirthDate;
+	@FXML
+	private Label labelErrorBaseSalary;
 	@FXML
 	private Button btSave;
 	@FXML
@@ -126,18 +142,32 @@ public class SellerFormController implements Initializable {
 		
 	}
 
-	private void initializaNodes() {
+	private void initializaNodes() { // DEFINIMOS OQ VAI EM CADA LINHA
 		Constraints.setTextFieldInteger(txtId);
-		Constraints.setTextFieldMaxLength(txtName, 30);
-
+		Constraints.setTextFieldMaxLength(txtName, 100);
+		Constraints.setTextFieldDouble(txtBaseSalary);
+		Constraints.setTextFieldMaxLength(txtEmail, 60);
+		Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
 	}
 	
 	public void updateFormData() {
-		if(entity == null) {
+		if(entity == null) { //SE FOR NULO, TRAZ ENTIDADE VAZIA
 			throw new IllegalStateException("Entity was null");
-		}
+		} // PEGA OS DADOS DO NOSSO OBJETO E JOGA NO NOSSO FORMULARIO
+			//VALUEOF É CONVERSOR DE ID PARA STRING
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
+		txtEmail.setText(entity.getEmail());
+		Locale.setDefault(Locale.US);
+		txtBaseSalary.setText(String.format("%.2f",entity.getBaseSalary()));
+		// SE FOR DIFERENTE DE NULO, TENTAMOS A CONVERSÃO
+		if(entity.getBirthDate() != null) {
+			// DATEPICKER TRABALHA COM LOCAL DATE, E O GET NOS RETORNA UM JAVA.UTIL.DATE
+			// ENTAO UTILIZAREMOS UM CONVERSOR, E USAREMOS A DATA ATUAL DO COMPUTADOR
+			// COMO BASE, POIS HÁ O FUSO-HORARIO 
+			dpBirthDate.setValue(LocalDate.ofInstant(entity.getBirthDate().toInstant(), ZoneId.systemDefault()));
+		}
+		
 	}
 	
 	private void setErrorMessages(Map<String, String> errors) {
