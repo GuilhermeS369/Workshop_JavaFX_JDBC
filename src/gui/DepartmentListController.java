@@ -97,13 +97,13 @@ public class DepartmentListController implements Initializable, DataChangeListen
 			// CRIA A TELA
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
-			//PEGA O CONTROLADOR E PASSA ESSA TELA COMO CONTROLADORA
+			// PEGA O CONTROLADOR E PASSA ESSA TELA COMO CONTROLADORA
 			DepartmentFormController controller = loader.getController();
-			//INSTANCIAMOS DEPARTAMENTO PARA O CONTROLLER FORNECIDO
+			// INSTANCIAMOS DEPARTAMENTO PARA O CONTROLLER FORNECIDO
 			controller.setDepartment(obj);
-			// INSTANCIAMOS TAMBE MO DEPARTMENTSERVICE PARA O CONTROLLER FORNECIDO
+			// INSTANCIAMOS TAMBEM O DEPARTMENTSERVICE PARA O CONTROLLER FORNECIDO
 			controller.setDepartmentService(new DepartmentService());
-			//INSCREVER ESSE DIALOG FORM PARA RECEBER O UPDATE NA HORA Q ALGO MUDAR ONDATACHANGED
+			// INSCREVER ESSE DIALOG FORM PARA RECEBER O UPDATE NA HORA Q ALGO MUDAR ONDATACHANGED
 			controller.subscribeDataChangeListener(this);
 			// PEGAMOS AS INFORMAÇÕES E SUBIMOS NA TELA
 			controller.updateFormData();
@@ -112,7 +112,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 			
 			// INSTANCIAMOS UM NOVO STAGE PARA POR UM NA FRENTE DO OUTRO:
 			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Enter Department ata");
+			dialogStage.setTitle("Enter Department Data");
 			// CRIAMOS UMA NOVA CENA DIZENDO O ELEMENTO RAIZ DELA COMO PANE
 			dialogStage.setScene(new Scene(pane));
 			// PROIBIDO REDIMENSIOANR TELA:
