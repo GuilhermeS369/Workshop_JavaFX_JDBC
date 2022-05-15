@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -121,26 +123,55 @@ public class SellerFormController implements Initializable {
 
 	}
 
-	// PUXA OQ TEM NA CAIXA, SETA NO OBJ DEPARTMENT E RETORNA NO METODO
+	// PEGA OS DADOS PREENCHIDOS NO FORMULARIO E CARREGA UM OBJETO COM ESSES DADOS
+	// RETORNA O OBJETO COM ESSES DADOS
 	private Seller getFormData() {
 
 		Seller obj = new Seller();
-
 		// INSTANCIAMOS A CLASSE RESPONSAVEL POR TRATAR OS ERROS
 		ValidationException exception = new ValidationException("Validation Error");
-
+		
+		/// ----------------------------------ID-------------------------------------------
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
+		
+		/// ----------------------------------NAME-------------------------------------------
 		// VALIDA SE A CAIXA É NULA OU VAZIA PARA GERAR A EXCEÇÃO
 		// .TRIM TIRA OS ESPAÇOS DO Q VAI SER GET
 		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
 			exception.addError("name", "Field can't be empty");
-		}
+		}		
 		obj.setName(txtName.getText());
-		// SE AL ISTA FOR MAIOR Q 0, LANÇA A EXCEÇÃO.
+		
+		/// ---------------------------------EMAIL--------------------------------------------
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
+			exception.addError("email", "Field can't be empty");
+		}		
+		obj.setEmail(txtEmail.getText());
+		
+		/// ---------------------------------DATA--------------------------------------------
+		// RECEBE O CONTEUDO LADO DATE PICKER
+		if(dpBirthDate.getValue() == null) {
+			exception.addError("birthDate", "Field can't be empty");
+		}
+		else {
+		Instant instant = Instant.from(dpBirthDate.getValue().atStartOfDay(ZoneId.systemDefault()));
+		obj.setBirthDate(Date.from(instant));
+		}
+		/// ---------------------------------BaseSalary--------------------------------------------
+		if (txtBaseSalary.getText() == null || txtBaseSalary.getText().trim().equals("")) {
+		exception.addError("baseSalary", "Field can't be empty");
+		}		
+		obj.setBaseSalary(Utils.tryParseToDouble(txtBaseSalary.getText()));
+		
+		
+		/// ---------------------------------Department--------------------------------------------
+		obj.setDepartment(comboBoxDepartment.getValue());
+		
+		/// -----------------------------------------------------------------------------
+		// SE A LISTA FOR MAIOR Q 0, LANÇA A EXCEÇÃO.
 		if (exception.getErrors().size() > 0) {
 			throw exception;
 		}
-
 		return obj;
 	}
 
@@ -204,15 +235,22 @@ public class SellerFormController implements Initializable {
 		// SETAREMOS NA COMBO BOX
 		comboBoxDepartment.setItems(obsList);
 	}
-
+	// TESTA CADA UM DOS LABELS, SE TIVER UM ERRO ELE APRESENTA
 	private void setErrorMessages(Map<String, String> errors) {
 		// FAÇO UMA LISTA COM O NOME DAS CHAVES
 		Set<String> fields = errors.keySet();
 		// USO CADA CHAVE TRAZENDO O ELEMENTO VINCULADO A ELA
-		if (fields.contains("name")) {
-			// EXIBE NA LABEL O ERRO DA CHAVE NAME
-			labelErrorName.setText(errors.get("name"));
-		}
+		
+		// EXIBE NA LABEL O ERRO DA CHAVE NAME
+		//TERNARIO, SE TIVER NAME, RETORNA TRUE, SE FOR TRUE ELE DA O GET, SENAO , DEIXA VAZIO.
+		labelErrorName.setText((fields.contains("name") ? errors.get("name") : ""));
+		
+		labelErrorEmail.setText((fields.contains("email") ? errors.get("email") : ""));
+		
+		labelErrorBaseSalary.setText((fields.contains("baseSalary") ? errors.get("baseSalary") : ""));
+		
+		labelErrorBirthDate.setText	((fields.contains("birthDate") ? errors.get("birthDate") : ""));
+	
 
 	}
 

@@ -28,6 +28,15 @@ public class Utils {
 			return null;
 		}
 	}
+	
+	// TENTA TRANSFORMAR EM DOUBLE
+		public static Double tryParseToDouble(String str) {
+			try {
+				return Double.parseDouble(str);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
 
 	// METODO QUE TRATA A DATA PARA A COLUNA SER DO TIPO DATA, RECEBE QUALQUER TIPO
 	// TRATA E RETORNA UM DATE
